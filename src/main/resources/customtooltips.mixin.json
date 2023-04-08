@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.akrozora.customtooltips.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinItemStack"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "customtooltips.mixin-refmap.json"
+}

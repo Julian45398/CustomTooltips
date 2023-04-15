@@ -9,6 +9,8 @@ import net.minecraft.network.chat.*;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class DataHelper {
         }
 
     }
+    private static final String PATH_DIRECTORY = "config/CustomTooltips";
     private static final String DEFAULT = "default";
     private static final String TOOLTIPS = "tooltips";
     private static final String STATE = "state";
@@ -181,7 +184,7 @@ public class DataHelper {
                 jsonArray = object.getAsJsonArray(TOOLTIPS);
             }
             if(!object.has(TOOLTIPS)&& !object.has(DEFAULT)) {
-                CustomTooltips.LOGGER.warn("The Json file is not Properly written: if you dont have fields \""+DEFAULT+"\" or \""+TOOLTIPS+"\" dont use {} outside");
+                CustomTooltips.LOGGER.warn("The Json file is not Properly written: if you dont have fields \""+DEFAULT+"\" or \""+TOOLTIPS+"\" just use an Array");
             }
         }
         return jsonArray;
@@ -206,7 +209,7 @@ public class DataHelper {
 
     public static List<JsonElement> getFilesFromDirectory(){
         List<JsonElement> jsonElements = new ArrayList<>();
-        File directory = new File("config/CustomTooltips");
+        File directory = new File(PATH_DIRECTORY);
         if(directory.isDirectory()){
             File[] files = directory.listFiles();
             for (File file : files) {
@@ -218,5 +221,87 @@ public class DataHelper {
             CustomTooltips.LOGGER.warn("Directory \"CustomTooltips\" doesn't exist or is not a directory");
         }
         return jsonElements;
+    }
+
+    public static void createDirectory(){
+        File directory = new File(PATH_DIRECTORY);
+        if(directory.mkdirs()){
+            createExampleJson(directory);
+        } else if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            List<File> jsonFiles = new ArrayList<>();
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(".json")) {
+                    jsonFiles.add(file);
+                }
+            }
+            if(jsonFiles.size()==0){
+                createExampleJson(directory);
+            }
+        }
+    }
+    public static void createExampleJson(File directory){
+        File exampleFile = new File(directory, "example.json");
+        try {
+            String jsonInhalt = "{ \"default\":{\n" +
+                    "  \"color\": \"green\",\n" +
+                    "  \"state\": \"bottom\"\n" +
+                    "},\n" +
+                    "  \"tooltips\": [\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_cat\"},\n" +
+                    "      \"text\": {\"tooltip\": \"By default any Tooltip is set on Top of existing ones and the default color is white\"}\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_otherside\"},\n" +
+                    "      \"text\": {\"tooltip\": \"you can set your own default color and position if you create another field \\\"default\\\"\"}\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_blocks\"},\n" +
+                    "      \"text\": {\"tooltip\": \"if you don`t want to set new default setting you can just write the json file as an Array\"}\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_chirp\"},\n" +
+                    "      \"text\": {\"tooltip\": \"you can write as many JSON files as you want\"}\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_chirp\"},\n" +
+                    "      \"text\": {\"tooltip\": \"duplicate targets will not be added\"}\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_13\"},\n" +
+                    "      \"text\": [\n" +
+                    "        {\"tooltip_line\": \"The\", \"color\": \"#ff2929\"},\n" +
+                    "        {\"tooltip_line\": \"Tooltip\", \"color\": \"#ff7029\"},\n" +
+                    "        {\"tooltip_line\": \"can\", \"color\": \"#ffea29\"},\n" +
+                    "        {\"tooltip_line\": \"be\", \"color\": \"#8dff29\"},\n" +
+                    "        {\"tooltip_line\": \"an\", \"color\": \"#29ffc9\"},\n" +
+                    "        {\"tooltip_line\": \"Array\", \"color\": \"#2965ff\"},\n" +
+                    "        {\"tooltip_line\": \"so\", \"color\": \"#ff29d8\"},\n" +
+                    "        {\"tooltip_line\": \"you\", \"color\": \"#ff2929\"},\n" +
+                    "        {\"tooltip_line\": \"can\", \"color\": \"green\"},\n" +
+                    "        {\"tooltip_line\": \"set\", \"color\": \"red\"},\n" +
+                    "        {\"tooltip_line\": \"every\", \"color\": \"yellow\"},\n" +
+                    "        {\"tooltip_line\": \"color\", \"color\": \"dark_red\"},\n" +
+                    "        {\"tooltip_line\": \"individually\", \"color\": \"aqua\"}\n" +
+                    "      ],\n" +
+                    "      \"state\": \"replace\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"target\": {\"item\": \"minecraft:music_disc_pigstep\"},\n" +
+                    "      \"text\": {\"tooltip\": \"You can add to existing Tooltips and set the Position with \\\"state\\\"\"},\n" +
+                    "      \"state\": \"bottom\"\n" +
+                    "    },\n" +
+                    "    {\"target\": {\"tag\": \"minecraft:planks\"},\n" +
+                    "      \"text\": {\"tooltip\": \"You can add Tooltips to any Tag\"}}\n" +
+                    "  ]\n" +
+                    "}";
+            FileWriter writer = new FileWriter(exampleFile);
+            writer.write(jsonInhalt);
+            writer.close();
+            System.out.println("JSON-Datei erstellt: " + exampleFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

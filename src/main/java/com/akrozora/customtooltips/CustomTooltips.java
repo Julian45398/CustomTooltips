@@ -1,17 +1,13 @@
 package com.akrozora.customtooltips;
 
-import com.akrozora.customtooltips.util.TooltipModifier;
 import com.akrozora.customtooltips.util.DataHelper;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -29,7 +25,7 @@ public class CustomTooltips
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        //MinecraftForge.EVENT_BUS.register(this);
 
 
 
@@ -44,6 +40,6 @@ public class CustomTooltips
     }
 
     private void clientSetup(final FMLClientSetupEvent event){
-
+        DataHelper.createDirectory();
     }
 }

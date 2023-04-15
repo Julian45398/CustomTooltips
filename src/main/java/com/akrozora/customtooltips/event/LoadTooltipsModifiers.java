@@ -13,7 +13,7 @@ public class LoadTooltipsModifiers {
 
 
     @SubscribeEvent
-    public static void onItemTooltip(TagsUpdatedEvent evt) {
+    public static void createTooltipList(TagsUpdatedEvent evt) {
         DataHelper.modifierArrayList = DataHelper.createList();
     }
     @SubscribeEvent

@@ -19,6 +19,12 @@ public abstract class MixinItemStack {
             target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V" ))
     public void appendHoverMixin(Item item, ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag){
         TooltipModifier tooltipModifier = null;
+        if(level==null) return;
+        else if (!level.isClientSide()) {
+            System.out.println("THIS OPERATION IS SERVERSIDE");
+        } else if (level.isClientSide()) {
+            System.out.println("THIS OPERATION IS CLIENTSIDE");
+        }
         for (int i = 0; i < DataHelper.modifierArrayList.size(); i++) {
             TooltipModifier modifier = DataHelper.modifierArrayList.get(i);
             if(modifier.item.test(stack)){

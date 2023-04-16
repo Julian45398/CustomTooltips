@@ -63,7 +63,9 @@ public class DataHelper {
             for (int j = 0; j < jsonArray.size(); j++) {
                 JsonObject component = jsonArray.get(j).getAsJsonObject();
                 TooltipModifier tooltip = createTooltip(component);
-                list.add(tooltip);
+                if(tooltip.item!=Ingredient.EMPTY){
+                    list.add(tooltip);
+                }
             }
         }
         return list;
@@ -71,12 +73,18 @@ public class DataHelper {
     public static TooltipModifier createTooltip(JsonObject component){
         Ingredient item = Ingredient.EMPTY;
         List<MutableComponent> tooltipText = new ArrayList<>();
+
         if (component.has(TARGET)){
             if(component.get(TARGET).isJsonObject()) {
                 item = Ingredient.fromJson(component.get(TARGET).getAsJsonObject());
             }
         } else {
             CustomTooltips.LOGGER.warn("JSON file has to contain member \"" + TARGET + "\"");
+        }
+
+
+        if(component.has("item")||component.has("tag")){
+            item = Ingredient.fromJson(component);
         }
         if (!component.has(TEXT)){
             CustomTooltips.LOGGER.warn("JSON file has to contain member \"" + TEXT + "\"");
@@ -243,33 +251,34 @@ public class DataHelper {
     public static void createExampleJson(File directory){
         File exampleFile = new File(directory, "example.json");
         try {
-            String jsonInhalt = "{ \"default\":{\n" +
+            String jsonInhalt =
+                    "{ \"default\":{\n" +
                     "  \"color\": \"green\",\n" +
                     "  \"state\": \"bottom\"\n" +
                     "},\n" +
                     "  \"tooltips\": [\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_cat\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_cat\",\n" +
                     "      \"text\": {\"tooltip\": \"By default any Tooltip is set on Top of existing ones and the default color is white\"}\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_otherside\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_otherside\",\n" +
                     "      \"text\": {\"tooltip\": \"you can set your own default color and position if you create another field \\\"default\\\"\"}\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_blocks\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_blocks\",\n" +
                     "      \"text\": {\"tooltip\": \"if you don`t want to set new default setting you can just write the json file as an Array\"}\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_chirp\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_chirp\",\n" +
                     "      \"text\": {\"tooltip\": \"you can write as many JSON files as you want\"}\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_chirp\"},\n" +
-                    "      \"text\": {\"tooltip\": \"duplicate targets will not be added\"}\n" +
+                    "      \"item\": \"minecraft:music_disc_chirp\",\n" +
+                    "      \"text\": {\"tooltip\": \"if you have two duplicate items only the first will be added as tooltip\"}\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_13\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_13\",\n" +
                     "      \"text\": [\n" +
                     "        {\"tooltip_line\": \"The\", \"color\": \"#ff2929\"},\n" +
                     "        {\"tooltip_line\": \"Tooltip\", \"color\": \"#ff7029\"},\n" +
@@ -288,12 +297,14 @@ public class DataHelper {
                     "      \"state\": \"replace\"\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"target\": {\"item\": \"minecraft:music_disc_pigstep\"},\n" +
+                    "      \"item\": \"minecraft:music_disc_pigstep\",\n" +
                     "      \"text\": {\"tooltip\": \"You can add to existing Tooltips and set the Position with \\\"state\\\"\"},\n" +
                     "      \"state\": \"bottom\"\n" +
                     "    },\n" +
-                    "    {\"target\": {\"tag\": \"minecraft:planks\"},\n" +
-                    "      \"text\": {\"tooltip\": \"You can add Tooltips to any Tag\"}}\n" +
+                    "    {\n" +
+                    "      \"tag\": \"minecraft:planks\",\n" +
+                    "      \"text\": {\"tooltip\": \"You can add Tooltips to any Tag\"}\n" +
+                    "    }\n" +
                     "  ]\n" +
                     "}";
             FileWriter writer = new FileWriter(exampleFile);

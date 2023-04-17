@@ -1,12 +1,15 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "com.akrozora.customtooltips.mixin",
+  "refmap": "mixins.customtooltips.refmap.json",
+  "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
-  "client": [
-    "MixinItemStack"
+  "client": ["MixinItemStack"],
+  "mixins": [
+
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "refmap": "customtooltips.mixin-refmap.json"
+  }
 }

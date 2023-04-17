@@ -36,7 +36,7 @@ authors="akroZora" #optional
 description='''
 Mod to add Custom Tooltips to Items and Blocks
 
-Intended for Modpacks to add lore
+Intended for Modpacks
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.customtooltips]] #optional

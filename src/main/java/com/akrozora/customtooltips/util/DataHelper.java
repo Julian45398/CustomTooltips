@@ -136,12 +136,8 @@ public class DataHelper {
 
     private static MutableComponent setComponentColor(JsonObject object, MutableComponent inputComponent){
         if (object.has(COLOR)) {
-            System.out.println(inputComponent.toString());
-            System.out.println("Object has COLOR: "+ object.get(COLOR).getAsString());
-
             inputComponent.setStyle(Style.EMPTY.withColor(TextColor.parseColor(object.get(COLOR).getAsString())));
         } else if (DefaultColor !=null) {
-            System.out.println("Object doesn't have COLOR!!");
             inputComponent.withStyle(Style.EMPTY.withColor(DefaultColor));
         }
         return inputComponent;
@@ -154,13 +150,11 @@ public class DataHelper {
             return tooltips;
         }
         int lineIndex = 0;
-        System.out.println("Getting TOOLTIPS from ARRAY!!");
         for (int i = 0; i < componentArray.size(); i++) {
             if(!componentArray.get(i).isJsonObject()) continue;
             JsonObject object = componentArray.get(i).getAsJsonObject();
             if(object.has(TEXTCOMPONENT_LINE)||object.has(TRANSLATECOMPONENT_LINE)||i==0){
                 tooltips.add(getComponentFromObject(object));
-                System.out.println(getComponentFromObject(object));
                 if(i!=0) lineIndex++;
             } else {
                 tooltips.get(lineIndex).append(getComponentFromObject(object));
@@ -310,7 +304,7 @@ public class DataHelper {
             FileWriter writer = new FileWriter(exampleFile);
             writer.write(jsonInhalt);
             writer.close();
-            System.out.println("JSON-Datei erstellt: " + exampleFile.getAbsolutePath());
+            CustomTooltips.LOGGER.info("Created JSON-File at: " + exampleFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }

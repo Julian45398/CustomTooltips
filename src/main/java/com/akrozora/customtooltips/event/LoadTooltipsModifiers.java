@@ -20,5 +20,4 @@ public class LoadTooltipsModifiers {
     public static void onReload(AddReloadListenerEvent evt) {
         DataHelper.modifierArrayList = DataHelper.createList();
     }
-
 }
